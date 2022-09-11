@@ -8,7 +8,7 @@ const HeaderStyle = styled.header`
 
   .header {
     &__main-wrapper {
-        width: min(95%, 130rem);
+        width: min(95%, 125rem);
         margin-inline: auto;
         display: flex;
         justify-content: space-between;

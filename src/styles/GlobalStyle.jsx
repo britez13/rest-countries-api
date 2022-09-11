@@ -22,6 +22,11 @@ const GlobalStyle = createGlobalStyle`
     h1, h2 {
         font-weight: 800;
     }
+
+    a, a:visited, a:hover {
+        color: black;
+        text-decoration: none;
+    }
     
 `;
 
