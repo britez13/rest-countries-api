@@ -18,24 +18,29 @@ const HomeStyle = styled.main`
     align-items: center;
 
     &__form {
-        padding: 1.5rem 3rem;
-        background-color: white;
-        border-radius: .7rem;
-        width: 25vw;
-        display: flex;
-        gap: 1.5rem;
+      padding: 1.5rem 3rem;
+      background-color: white;
+      border-radius: 0.7rem;
+      width: 25vw;
+      display: flex;
+      gap: 1.5rem;
     }
 
     &__search-icon {
-        font-size: 1.3rem;
-        color: ${({theme})=>theme.colors.darkGray};
+      font-size: 1.3rem;
+      color: ${({ theme }) => theme.colors.darkGray};
     }
 
     &__input {
-        border: none;
-        outline: none;
+      border: none;
+      outline: none;
     }
 
+    &__select {
+      padding: 1.5rem 3rem;
+      outline: none;
+      border: none
+    }
   }
 
   .countries {

@@ -26,7 +26,7 @@ const App = () => {
         <Header />
         <Routes>
           <Route exact path='/' element={<Home />} />
-          <Route path='country:id' element={<CountryDetail />} />
+          <Route path='/:id' element={<CountryDetail />} />
         </Routes>
       </ThemeProvider>
     </BrowserRouter>
