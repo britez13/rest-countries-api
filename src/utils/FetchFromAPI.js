@@ -1,8 +1,8 @@
 import axios from "axios";
 
-const URL = "https://restcountries.com/v3.1/all"
+const BASE_URL = "https://restcountries.com/v3.1"
 
-export const FetchFromAPI = async () => {
-    const {data} = await axios.get(URL)
+export const FetchFromAPI = async (url) => {
+    const { data } = await axios.get(`${BASE_URL}/${url}`);
     return data;
 }

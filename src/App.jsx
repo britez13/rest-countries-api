@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
 import GlobalStyle from "./styles/GlobalStyle";
@@ -18,16 +19,21 @@ const theme = {
   },
 };
 
+export const CountriesContext = React.createContext();
+
 const App = () => {
+  const [allCountries, setAllCountries] = useState();
   return (
     <BrowserRouter>
       <ThemeProvider theme={theme}>
         <GlobalStyle />
-        <Header />
-        <Routes>
-          <Route exact path='/' element={<Home />} />
-          <Route path='/:id' element={<CountryDetail />} />
-        </Routes>
+        <CountriesContext.Provider value={[allCountries, setAllCountries]}>
+          <Header />
+          <Routes>
+            <Route exact path='/' element={<Home />} />
+            <Route path='/:id' element={<CountryDetail />} />
+          </Routes>
+        </CountriesContext.Provider>
       </ThemeProvider>
     </BrowserRouter>
   );

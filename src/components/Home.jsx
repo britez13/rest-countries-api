@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import HomeStyle from "../styles/Home.styled";
 import { FetchFromAPI } from "../utils/FetchFromAPI";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { CountriesContext } from "../App";
 
 const Home = () => {
-  const [allCountries, setAllCountries] = useState(null);
+  const [allCountries, setAllCountries] = useContext(CountriesContext);
   const [countries, setCountries] = useState(null);
   const [countrySearched, setCountrySearched] = useState("");
   const [region, setRegion] = useState("All");
@@ -59,7 +60,7 @@ const Home = () => {
   };
 
   useEffect(() => {
-    FetchFromAPI().then((data) => {
+    FetchFromAPI("all").then((data) => {
       setAllCountries(data);
       setCountries(data);
     });
