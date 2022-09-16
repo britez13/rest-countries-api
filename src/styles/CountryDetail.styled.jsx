@@ -48,7 +48,7 @@ const CountryDetailStyle = styled.main`
     justify-content: space-between;
 
     & div {
-      p {
+      & p {
         font-size: 1.4rem;
         font-weight: 600;
         margin-bottom: 0.7rem;
@@ -58,6 +58,31 @@ const CountryDetailStyle = styled.main`
         }
       }
     }
+  }
+
+  .third-wrapper {
+    margin-top: 3rem;
+    & div {
+      & p {
+        font-size: 1.6rem;
+        font-weight: 600;
+      }
+    }
+  }
+
+  .border-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .7rem;
+
+  }
+
+  .border-link {
+    font-size: 1.4rem;
+    background-color: white;
+    padding: .5rem 1rem;
+    border: 1px solid gray;
+    border-radius: .7rem;
   }
 `;
 

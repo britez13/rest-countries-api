@@ -12,26 +12,76 @@ const CountryDetail = () => {
   const [country, setCountry] = useState(null);
 
   useEffect(() => {
-    FetchFromAPI(`name/${id}`).then((data) => {
+    FetchFromAPI(`name/${id}?fullText=true`).then((data) => {
       setCountry(data[0]);
     });
-  }, []);
+  }, [id]);
 
-  // const { name, flags, population, region, subregion, capital, tld, languages } = allCountries.find(
-  //   (country) => country.name.common.toLowerCase() === id
-  // );
-
-  const getMultipleValues = (data) => {
-    let values = "";
-    values += Objects.value(data).map((value, index) => {
-      return value;
-    });
+  const getNativeName = (data) => {
+    if (data) {
+      const nativeName = Object.values(data)[0].official;
+      return nativeName;
+    }
   };
+
+  const getCurrencies = (data) => {
+    if (data) {
+      const currencies = Object.values(data)
+        .map((item) => item.name)
+        .join(", ");
+      return currencies;
+    }
+  };
+
+  const getLanguages = (data) => {
+    if (data) {
+      const values = Object.values(data).join(", ");
+      return values;
+    }
+  };
+
+  const getBorderCountries = (data) => {
+    const borders = data.map((border) => {
+      return allCountries.find((country) => country.cca3 === border);
+    });
+
+    console.log(borders);
+
+    //  return borders.map(country => {
+    //    return (
+    //      <span className="border-wrapper" key={country.name.common}>
+    //        <Link
+    //          className='border-link'
+    //          to={`/${country.name.common.toLowerCase()}`}
+    //        >
+    //          {country.name.common}
+    //        </Link>
+    //      </span>
+    //    );
+    //  })
+
+    return (
+      <span className='border-wrapper'>
+        {borders.map((country) => {
+          return (
+            <Link
+              key={country.name.common}
+              className='border-link'
+              to={`/${country.name.common.toLowerCase()}`}
+            >
+              {country.name.common}
+            </Link>
+          );
+        })}
+      </span>
+    );
+  };
+
   console.log(country);
 
   return (
     <CountryDetailStyle>
-      <Link className='first-section' to="/">
+      <Link className='first-section' to='/'>
         <FontAwesomeIcon
           className='arrow'
           icon={faArrowLeftLong}
@@ -47,9 +97,9 @@ const CountryDetail = () => {
           <div className='second-wrapper'>
             <div>
               <p>
-                Native Name: <span></span>
+                Native Name:{" "}
+                <span>{getNativeName(country?.name.nativeName)}</span>
               </p>
-              {/* <p>{country.}</p>  */}
               <p>
                 Population:{" "}
                 <span>{parseInt(country?.population).toLocaleString()}</span>
@@ -60,20 +110,29 @@ const CountryDetail = () => {
               <p>
                 Sub Region: <span>{country?.subregion}</span>
               </p>
-              <p>
-                Capital: <span>{country?.capital[0]}</span>
-              </p>
+              {country?.capital && (
+                <p>
+                  Capital: <span>{country?.capital[0]}</span>
+                </p>
+              )}
             </div>
 
             <div>
               <p>
                 Top Level Domain: <span>{country?.tld[0]}</span>
               </p>
-              {/* <p>{getMultipleValues(languages)}</p> */}
+              <p>
+                Currencies: <span>{getCurrencies(country?.currencies)}</span>
+              </p>
+              <p>
+                Languages: <span>{getLanguages(country?.languages)}</span>
+              </p>
             </div>
           </div>
           <div className='third-wrapper'>
-            <p>Border countries</p>
+            {country?.borders && (
+              <p>Border countries: {getBorderCountries(country?.borders)}</p>
+            )}
           </div>
         </div>
       </section>
