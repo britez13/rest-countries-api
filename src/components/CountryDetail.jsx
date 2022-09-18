@@ -4,16 +4,21 @@ import { CountriesContext } from "../App";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
 import { FetchFromAPI } from "../utils/FetchFromAPI";
+import { Oval } from "react-loader-spinner";
 import CountryDetailStyle from "../styles/CountryDetail.styled";
 
-const CountryDetail = () => {
+
+const CountryDetail = ({ isDarkMode }) => {
   const { id } = useParams();
   const [allCountries] = useContext(CountriesContext);
   const [country, setCountry] = useState(null);
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
+    setIsLoading(true)
     FetchFromAPI(`name/${id}?fullText=true`).then((data) => {
       setCountry(data[0]);
+      setIsLoading(false)
     });
   }, [id]);
 
@@ -80,62 +85,85 @@ const CountryDetail = () => {
   console.log(country);
 
   return (
-    <CountryDetailStyle>
-      <Link className='first-section' to='/'>
-        <FontAwesomeIcon
-          className='arrow'
-          icon={faArrowLeftLong}
-        ></FontAwesomeIcon>
-        <p>Back</p>
-      </Link>
-      <section className='second-section'>
-        <img className='country-image' src={country?.flags.svg} />
-        <div className='info-wrapper'>
-          <div className='first-wrapper'>
-            <h1 className='country-name'>{country?.name.common}</h1>
-          </div>
-          <div className='second-wrapper'>
-            <div>
-              <p>
-                Native Name:{" "}
-                <span>{getNativeName(country?.name.nativeName)}</span>
-              </p>
-              <p>
-                Population:{" "}
-                <span>{parseInt(country?.population).toLocaleString()}</span>
-              </p>
-              <p>
-                Region: <span>{country?.region}</span>
-              </p>
-              <p>
-                Sub Region: <span>{country?.subregion}</span>
-              </p>
-              {country?.capital && (
-                <p>
-                  Capital: <span>{country?.capital[0]}</span>
-                </p>
-              )}
-            </div>
+    <CountryDetailStyle isDarkMode={isDarkMode}>
+      <div className='main-wrapper'>
+        <Link className='first-section' to='/'>
+          <FontAwesomeIcon
+            className='arrow'
+            icon={faArrowLeftLong}
+          ></FontAwesomeIcon>
+          <p>Back</p>
+        </Link>
 
-            <div>
-              <p>
-                Top Level Domain: <span>{country?.tld[0]}</span>
-              </p>
-              <p>
-                Currencies: <span>{getCurrencies(country?.currencies)}</span>
-              </p>
-              <p>
-                Languages: <span>{getLanguages(country?.languages)}</span>
-              </p>
+        {isLoading ? (
+          <Oval
+            height={180}
+            width={180}
+            color={isDarkMode ? "#184061" : "#3a3a3a"}
+            wrapperStyle={{}}
+            wrapperClass=''
+            visible={true}
+            ariaLabel='oval-loading'
+            secondaryColor={isDarkMode ? "white" : "gray"}
+            strokeWidth={2}
+            strokeWidthSecondary={2}
+          />
+        ) : (
+          <section className='second-section'>
+            <img className='country-image' src={country?.flags.svg} />
+            <div className='info-wrapper'>
+              <div className='first-wrapper'>
+                <h1 className='country-name'>{country?.name.common}</h1>
+              </div>
+              <div className='second-wrapper'>
+                <div>
+                  <p>
+                    Native Name:{" "}
+                    <span>{getNativeName(country?.name.nativeName)}</span>
+                  </p>
+                  <p>
+                    Population:{" "}
+                    <span>
+                      {parseInt(country?.population).toLocaleString()}
+                    </span>
+                  </p>
+                  <p>
+                    Region: <span>{country?.region}</span>
+                  </p>
+                  <p>
+                    Sub Region: <span>{country?.subregion}</span>
+                  </p>
+                  {country?.capital && (
+                    <p>
+                      Capital: <span>{country?.capital[0]}</span>
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <p>
+                    Top Level Domain: <span>{country?.tld[0]}</span>
+                  </p>
+                  <p>
+                    Currencies:{" "}
+                    <span>{getCurrencies(country?.currencies)}</span>
+                  </p>
+                  <p>
+                    Languages: <span>{getLanguages(country?.languages)}</span>
+                  </p>
+                </div>
+              </div>
+              <div className='third-wrapper'>
+                {country?.borders && (
+                  <p>
+                    Border countries: {getBorderCountries(country?.borders)}
+                  </p>
+                )}
+              </div>
             </div>
-          </div>
-          <div className='third-wrapper'>
-            {country?.borders && (
-              <p>Border countries: {getBorderCountries(country?.borders)}</p>
-            )}
-          </div>
-        </div>
-      </section>
+          </section>
+        )}
+      </div>
     </CountryDetailStyle>
   );
 };

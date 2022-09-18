@@ -1,23 +1,38 @@
 import styled from "styled-components";
 
 const CountryDetailStyle = styled.main`
-  width: min(95%, 125rem);
-  margin-inline: auto;
+  min-height: 92vh;
+  background-color: ${({ isDarkMode, theme }) =>
+    isDarkMode ? theme.colors.veryDarkBlue : theme.colors.veryLightGray};
+
+  .main-wrapper {
+    width: min(95%, 125rem);
+    margin-inline: auto;
+    padding-top: 8rem;
+  }
 
   .first-section {
-    margin-top: 8rem;
+    background-color: ${({ isDarkMode, theme }) =>
+      isDarkMode ? "#2B3844" : theme.colors.veryLightGray};
     display: flex;
     gap: 1rem;
     align-items: center;
-    padding: 0.5rem 1rem;
+    padding-block: 1rem;
+    padding-left: 3.5rem;
+    width: 13.6rem;
+    border-radius: 0.7rem;
 
     & p {
       font-size: 1.6rem;
+      color: ${({ isDarkMode, theme }) =>
+        isDarkMode ? theme.colors.anotherGray : theme.colors.veryDarkBlue};
     }
   }
 
   .arrow {
     font-size: 1.6rem;
+    color: ${({ isDarkMode, theme }) =>
+      isDarkMode ? theme.colors.veryLightGray : theme.colors.veryDarkBlue};
   }
 
   .second-section {
@@ -40,6 +55,8 @@ const CountryDetailStyle = styled.main`
   .country-name {
     font-size: 2.4rem;
     font-weight: 800;
+    color: ${({ isDarkMode, theme }) =>
+      isDarkMode ? theme.colors.veryLightGray : theme.colors.veryDarkBlue};
   }
 
   .second-wrapper {
@@ -51,10 +68,14 @@ const CountryDetailStyle = styled.main`
       & p {
         font-size: 1.4rem;
         font-weight: 600;
+        color: ${({ isDarkMode, theme }) =>
+          isDarkMode ? theme.colors.veryLightGray : theme.colors.veryDarkBlue};
         margin-bottom: 0.7rem;
 
         & span {
           font-weight: 300;
+          color: ${({ isDarkMode, theme }) =>
+            isDarkMode ? theme.colors.anotherGray : theme.colors.veryDarkBlue};
         }
       }
     }
@@ -62,27 +83,32 @@ const CountryDetailStyle = styled.main`
 
   .third-wrapper {
     margin-top: 3rem;
-    & div {
-      & p {
-        font-size: 1.6rem;
-        font-weight: 600;
-      }
+
+    & p {
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: ${({ isDarkMode, theme }) =>
+        isDarkMode ? theme.colors.veryLightGray : theme.colors.veryDarkBlue};
     }
   }
 
   .border-wrapper {
     display: flex;
     flex-wrap: wrap;
-    gap: .7rem;
-
+    gap: 0.7rem;
   }
 
   .border-link {
+    color: ${({ isDarkMode, theme }) =>
+      isDarkMode ? theme.colors.anotherGray : theme.colors.veryDarkBlue};
     font-size: 1.4rem;
-    background-color: white;
-    padding: .5rem 1rem;
-    border: 1px solid gray;
-    border-radius: .7rem;
+    background-color: ${({ isDarkMode, theme }) =>
+      isDarkMode ? "#2B3844" : theme.colors.veryLightGray};
+    padding: 0.5rem 1rem;
+    border: 1px solid
+      ${({ isDarkMode, theme }) =>
+        isDarkMode ? "#2B3844" : theme.colors.veryLightGray};
+    border-radius: 0.7rem;
   }
 `;
 

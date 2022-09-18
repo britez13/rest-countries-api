@@ -5,12 +5,14 @@ import { FetchFromAPI } from "../utils/FetchFromAPI";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { CountriesContext } from "../App";
+import { Oval } from "react-loader-spinner";
 
-const Home = () => {
+const Home = ({ isDarkMode }) => {
   const [allCountries, setAllCountries] = useContext(CountriesContext);
   const [countries, setCountries] = useState(null);
   const [countrySearched, setCountrySearched] = useState("");
   const [region, setRegion] = useState("All");
+  const [isLoading, setIsLoading] = useState(true)
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -63,13 +65,14 @@ const Home = () => {
     FetchFromAPI("all").then((data) => {
       setAllCountries(data);
       setCountries(data);
+      setIsLoading(false)
     });
   }, []);
 
   console.log(countries);
 
   return (
-    <HomeStyle>
+    <HomeStyle isDarkMode={isDarkMode}>
       <section className='home-wrapper'>
         <section className='options'>
           <form className='options__form' id='my_form'>
@@ -100,33 +103,48 @@ const Home = () => {
             <option value='value3'>Oceania</option>
           </select>
         </section>
-        <section className='countries'>
-          {countries &&
-            countries.map(({ name, flags, population, region, capital }) => {
-              return (
-                <Link
-                  className='country'
-                  to={`/${name.common.toLowerCase()}`}
-                  key={name.common}
-                >
-                  <img className='country__image' src={flags.png} />
-                  <div className='country__info'>
-                    <h2 className='country__name'>{name.common}</h2>
-                    <p>
-                      Population:{" "}
-                      <span>{parseInt(population).toLocaleString()}</span>
-                    </p>
-                    <p>
-                      Region: <span>{region}</span>
-                    </p>
-                    <p>
-                      Capital: <span>{capital}</span>
-                    </p>
-                  </div>
-                </Link>
-              );
-            })}
-        </section>
+        {isLoading ? (
+          <Oval
+            height={180}
+            width={180}
+            color={isDarkMode ? "#184061" : "#70195a"}
+            wrapperStyle={{}}
+            wrapperClass=''
+            visible={true}
+            ariaLabel='oval-loading'
+            secondaryColor={isDarkMode ? "white" : "gray"}
+            strokeWidth={2}
+            strokeWidthSecondary={2}
+          />
+        ) : (
+          <section className='countries'>
+            {countries &&
+              countries.map(({ name, flags, population, region, capital }) => {
+                return (
+                  <Link
+                    className='country'
+                    to={`/${name.common.toLowerCase()}`}
+                    key={name.common}
+                  >
+                    <img className='country__image' src={flags.png} />
+                    <div className='country__info'>
+                      <h2 className='country__name'>{name.common}</h2>
+                      <p>
+                        Population:{" "}
+                        <span>{parseInt(population).toLocaleString()}</span>
+                      </p>
+                      <p>
+                        Region: <span>{region}</span>
+                      </p>
+                      <p>
+                        Capital: <span>{capital}</span>
+                      </p>
+                    </div>
+                  </Link>
+                );
+              })}
+          </section>
+        )}
       </section>
     </HomeStyle>
   );
