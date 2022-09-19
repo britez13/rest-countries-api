@@ -16,31 +16,38 @@ const theme = {
     white: "hsl(0, 0%, 100%)",
   },
 
+  breakpoints: {
+    tablet: "600px",
+    desktop: "992px",
+    // lgDesktop: '1200px',
+  },
+
   fonts: {
     nunito: "'Nunito Sans', sans-serif",
   },
 };
 
-export const CountriesContext = React.createContext();
-
 const App = () => {
-  const [allCountries, setAllCountries] = useState();
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   return (
     <BrowserRouter>
       <ThemeProvider theme={theme}>
         <GlobalStyle />
-        <CountriesContext.Provider value={[allCountries, setAllCountries]}>
-          <Header isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
-          <Routes>
-            <Route exact path='/' element={<Home isDarkMode={isDarkMode} />} />
-            <Route
-              path='/:id'
-              element={<CountryDetail isDarkMode={isDarkMode} />}
-            />
-          </Routes>
-        </CountriesContext.Provider>
+        <Header isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
+        <Routes>
+          <Route
+            exact
+            path='/'
+            element={
+              <Home isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
+            }
+          />
+          <Route
+            path='/:id'
+            element={<CountryDetail isDarkMode={isDarkMode} />}
+          />
+        </Routes>
       </ThemeProvider>
     </BrowserRouter>
   );

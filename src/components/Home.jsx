@@ -3,16 +3,15 @@ import { Link } from "react-router-dom";
 import HomeStyle from "../styles/Home.styled";
 import { FetchFromAPI } from "../utils/FetchFromAPI";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
-import { CountriesContext } from "../App";
+import { faSearch,faArrowDown } from "@fortawesome/free-solid-svg-icons";
 import { Oval } from "react-loader-spinner";
 
-const Home = ({ isDarkMode }) => {
-  const [allCountries, setAllCountries] = useContext(CountriesContext);
+const Home = ({ isDarkMode, setIsDarkMode }) => {
+  const [allCountries, setAllCountries] = useState(null);
   const [countries, setCountries] = useState(null);
   const [countrySearched, setCountrySearched] = useState("");
   const [region, setRegion] = useState("All");
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -56,17 +55,21 @@ const Home = ({ isDarkMode }) => {
     }
   };
 
-  const getCountryName = (name) => {
-    const newName = name.replace(" ", "+").toLowerCase();
-    return newName;
-  };
-
   useEffect(() => {
     FetchFromAPI("all").then((data) => {
       setAllCountries(data);
       setCountries(data);
-      setIsLoading(false)
+      setIsLoading(false);
+      localStorage.setItem("allCountries", JSON.stringify(data));
     });
+
+    if (
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches
+    ) {
+      setIsDarkMode(true)
+    }
+
   }, []);
 
   console.log(countries);
@@ -75,7 +78,7 @@ const Home = ({ isDarkMode }) => {
     <HomeStyle isDarkMode={isDarkMode}>
       <section className='home-wrapper'>
         <section className='options'>
-          <form className='options__form' id='my_form'>
+          <form className='options__form' id='my_form' onSubmit={e => e.preventDefault()}>
             <FontAwesomeIcon
               className='options__search-icon'
               icon={faSearch}
@@ -103,48 +106,48 @@ const Home = ({ isDarkMode }) => {
             <option value='value3'>Oceania</option>
           </select>
         </section>
-        {isLoading ? (
-          <Oval
-            height={180}
-            width={180}
-            color={isDarkMode ? "#184061" : "#70195a"}
-            wrapperStyle={{}}
-            wrapperClass=''
-            visible={true}
-            ariaLabel='oval-loading'
-            secondaryColor={isDarkMode ? "white" : "gray"}
-            strokeWidth={2}
-            strokeWidthSecondary={2}
-          />
-        ) : (
-          <section className='countries'>
-            {countries &&
-              countries.map(({ name, flags, population, region, capital }) => {
-                return (
-                  <Link
-                    className='country'
-                    to={`/${name.common.toLowerCase()}`}
-                    key={name.common}
-                  >
-                    <img className='country__image' src={flags.png} />
-                    <div className='country__info'>
-                      <h2 className='country__name'>{name.common}</h2>
-                      <p>
-                        Population:{" "}
-                        <span>{parseInt(population).toLocaleString()}</span>
-                      </p>
-                      <p>
-                        Region: <span>{region}</span>
-                      </p>
-                      <p>
-                        Capital: <span>{capital}</span>
-                      </p>
-                    </div>
-                  </Link>
-                );
-              })}
-          </section>
-        )}
+
+        <section className='countries'>
+          {isLoading ? (
+            <Oval
+              height={80}
+              width={80}
+              color={isDarkMode ? "#fefeff" : "#414753"}
+              wrapperStyle={{}}
+              wrapperClass=''
+              visible={true}
+              ariaLabel='oval-loading'
+              secondaryColor={isDarkMode ? "white" : "gray"}
+              strokeWidth={2}
+              strokeWidthSecondary={2}
+            />
+          ) : (
+            countries.length === 0 ? <p className="no-country-warning">Any country match width the input.</p>  : countries.map(({ name, flags, population, region, capital }) => {
+              return (
+                <Link
+                  className='country'
+                  to={`/${name.common.toLowerCase()}`}
+                  key={name.common}
+                >
+                  <img className='country__image' src={flags.svg} />
+                  <div className='country__info'>
+                    <h2 className='country__name'>{name.common}</h2>
+                    <p>
+                      Population:{" "}
+                      <span>{parseInt(population).toLocaleString()}</span>
+                    </p>
+                    <p>
+                      Region: <span>{region}</span>
+                    </p>
+                    <p>
+                      Capital: <span>{capital}</span>
+                    </p>
+                  </div>
+                </Link>
+              );
+            })
+          )}
+        </section>
       </section>
     </HomeStyle>
   );

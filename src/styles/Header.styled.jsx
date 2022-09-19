@@ -5,7 +5,11 @@ const HeaderStyle = styled.header`
   background-color: ${({ isDarkMode, theme }) =>
     isDarkMode ? theme.colors.darkGreen : theme.colors.white};
   padding-block: 1.5rem;
-  border-bottom: 0.5px solid gray;
+  border-bottom: 0.5px solid
+    ${({ isDarkMode, theme }) =>
+      isDarkMode ? theme.colors.darkGreen : "#d8d6d6"};
+  display: flex;
+  align-items: center;
 
   .main-wrapper {
     width: min(95%, 125rem);
@@ -47,7 +51,7 @@ const HeaderStyle = styled.header`
 
   .light-icon {
     font-size: 1.4rem;
-    color: black;
+    color: ${({ theme }) => theme.colors.veryDarkBlue};
   }
 `;
 

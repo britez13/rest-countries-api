@@ -1,26 +1,35 @@
 import { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { CountriesContext } from "../App";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
-import { FetchFromAPI } from "../utils/FetchFromAPI";
-import { Oval } from "react-loader-spinner";
 import CountryDetailStyle from "../styles/CountryDetail.styled";
-
 
 const CountryDetail = ({ isDarkMode }) => {
   const { id } = useParams();
-  const [allCountries] = useContext(CountriesContext);
+  const [allCountries, setAllCountries] = useState();
   const [country, setCountry] = useState(null);
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    setIsLoading(true)
-    FetchFromAPI(`name/${id}?fullText=true`).then((data) => {
-      setCountry(data[0]);
-      setIsLoading(false)
-    });
+    setIsLoading(true);
+
+    const data = localStorage.getItem("allCountries");
+
+    if (data) {
+      setAllCountries(JSON.parse(data));
+      getCountry(data);
+    }
+
+    setIsLoading(false);
   }, [id]);
+
+  const getCountry = (data) => {
+    const myCountry = JSON.parse(data).find(
+      (country) => country.name.common.toLowerCase() === id
+    );
+    console.log(myCountry);
+    setCountry(myCountry);
+  };
 
   const getNativeName = (data) => {
     if (data) {
@@ -52,19 +61,6 @@ const CountryDetail = ({ isDarkMode }) => {
 
     console.log(borders);
 
-    //  return borders.map(country => {
-    //    return (
-    //      <span className="border-wrapper" key={country.name.common}>
-    //        <Link
-    //          className='border-link'
-    //          to={`/${country.name.common.toLowerCase()}`}
-    //        >
-    //          {country.name.common}
-    //        </Link>
-    //      </span>
-    //    );
-    //  })
-
     return (
       <span className='border-wrapper'>
         {borders.map((country) => {
@@ -95,74 +91,55 @@ const CountryDetail = ({ isDarkMode }) => {
           <p>Back</p>
         </Link>
 
-        {isLoading ? (
-          <Oval
-            height={180}
-            width={180}
-            color={isDarkMode ? "#184061" : "#3a3a3a"}
-            wrapperStyle={{}}
-            wrapperClass=''
-            visible={true}
-            ariaLabel='oval-loading'
-            secondaryColor={isDarkMode ? "white" : "gray"}
-            strokeWidth={2}
-            strokeWidthSecondary={2}
-          />
-        ) : (
-          <section className='second-section'>
-            <img className='country-image' src={country?.flags.svg} />
-            <div className='info-wrapper'>
-              <div className='first-wrapper'>
-                <h1 className='country-name'>{country?.name.common}</h1>
-              </div>
-              <div className='second-wrapper'>
-                <div>
+        <section className='second-section'>
+          <img className='country-image' src={country?.flags.svg} />
+          <div className='info-wrapper'>
+            <div className='first-wrapper'>
+              <h1 className='country-name'>{country?.name.common}</h1>
+            </div>
+            <div className='second-wrapper'>
+              <div>
+                <p>
+                  Native Name:{" "}
+                  <span>{getNativeName(country?.name.nativeName)}</span>
+                </p>
+                <p>
+                  Population:{" "}
+                  <span>{parseInt(country?.population).toLocaleString()}</span>
+                </p>
+                <p>
+                  Region: <span>{country?.region}</span>
+                </p>
+                <p>
+                  Sub Region: <span>{country?.subregion}</span>
+                </p>
+                {country?.capital && (
                   <p>
-                    Native Name:{" "}
-                    <span>{getNativeName(country?.name.nativeName)}</span>
-                  </p>
-                  <p>
-                    Population:{" "}
-                    <span>
-                      {parseInt(country?.population).toLocaleString()}
-                    </span>
-                  </p>
-                  <p>
-                    Region: <span>{country?.region}</span>
-                  </p>
-                  <p>
-                    Sub Region: <span>{country?.subregion}</span>
-                  </p>
-                  {country?.capital && (
-                    <p>
-                      Capital: <span>{country?.capital[0]}</span>
-                    </p>
-                  )}
-                </div>
-
-                <div>
-                  <p>
-                    Top Level Domain: <span>{country?.tld[0]}</span>
-                  </p>
-                  <p>
-                    Currencies:{" "}
-                    <span>{getCurrencies(country?.currencies)}</span>
-                  </p>
-                  <p>
-                    Languages: <span>{getLanguages(country?.languages)}</span>
-                  </p>
-                </div>
-              </div>
-              <div className='third-wrapper'>
-                {country?.borders && (
-                  <p>
-                    Border countries: {getBorderCountries(country?.borders)}
+                    Capital: <span>{country?.capital[0]}</span>
                   </p>
                 )}
               </div>
+
+              <div>
+                <p>
+                  Top Level Domain: <span>{country?.tld[0]}</span>
+                </p>
+                <p>
+                  Currencies: <span>{getCurrencies(country?.currencies)}</span>
+                </p>
+                
+                <p>
+                  Languages: <span>{getLanguages(country?.languages)}</span>
+                </p>
+              </div>
             </div>
-          </section>
-        )}
+            <div className='third-wrapper'>
+              {country?.borders && (
+                <p>Border countries: {getBorderCountries(country?.borders)}</p>
+              )}
+            </div>
+          </div>
+        </section>
       </div>
     </CountryDetailStyle>
   );
