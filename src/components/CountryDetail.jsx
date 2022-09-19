@@ -4,11 +4,20 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
 import CountryDetailStyle from "../styles/CountryDetail.styled";
 
-const CountryDetail = ({ isDarkMode }) => {
+const CountryDetail = ({ isDarkMode, setIsDarkMode }) => {
   const { id } = useParams();
   const [allCountries, setAllCountries] = useState();
   const [country, setCountry] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches
+    ) {
+      setIsDarkMode(true);
+    }
+  }, [])
 
   useEffect(() => {
     setIsLoading(true);
@@ -27,7 +36,6 @@ const CountryDetail = ({ isDarkMode }) => {
     const myCountry = JSON.parse(data).find(
       (country) => country.name.common.toLowerCase() === id
     );
-    console.log(myCountry);
     setCountry(myCountry);
   };
 
@@ -59,8 +67,6 @@ const CountryDetail = ({ isDarkMode }) => {
       return allCountries.find((country) => country.cca3 === border);
     });
 
-    console.log(borders);
-
     return (
       <span className='border-wrapper'>
         {borders.map((country) => {
@@ -77,8 +83,6 @@ const CountryDetail = ({ isDarkMode }) => {
       </span>
     );
   };
-
-  console.log(country);
 
   return (
     <CountryDetailStyle isDarkMode={isDarkMode}>
@@ -127,7 +131,7 @@ const CountryDetail = ({ isDarkMode }) => {
                 <p>
                   Currencies: <span>{getCurrencies(country?.currencies)}</span>
                 </p>
-                
+
                 <p>
                   Languages: <span>{getLanguages(country?.languages)}</span>
                 </p>

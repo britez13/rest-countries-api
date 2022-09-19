@@ -45,7 +45,12 @@ const App = () => {
           />
           <Route
             path='/:id'
-            element={<CountryDetail isDarkMode={isDarkMode} />}
+            element={
+              <CountryDetail
+                isDarkMode={isDarkMode}
+                setIsDarkMode={setIsDarkMode}
+              />
+            }
           />
         </Routes>
       </ThemeProvider>

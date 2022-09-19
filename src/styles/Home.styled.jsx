@@ -34,6 +34,7 @@ const HomeStyle = styled.main`
       border-radius: 0.7rem;
       width: 100%;
       display: flex;
+      align-items: center;
       gap: 1.5rem;
 
       @media (min-width: ${({ theme }) => theme.breakpoints.tablet}) {
@@ -61,7 +62,7 @@ const HomeStyle = styled.main`
     }
 
     &__select {
-      width: min(40%, 20rem);
+      width: min(40%, 15rem);
       background-color: ${({ isDarkMode, theme }) =>
         isDarkMode ? "#2B3844" : theme.colors.white};
       color: ${({ isDarkMode, theme }) =>
@@ -76,7 +77,7 @@ const HomeStyle = styled.main`
       position: relative;
 
       &::after {
-        content: '';
+        content: "";
         position: absolute;
         border: solid red;
         border-width: 0 3px 3px 0;
@@ -102,6 +103,11 @@ const HomeStyle = styled.main`
     font-size: 2rem;
     color: ${({ isDarkMode, theme }) =>
       isDarkMode ? theme.colors.white : theme.colors.veryDarkColor};
+
+    & span {
+      font-size: 2.5rem;
+      padding-left: 0.5rem;
+    }
   }
 
   .country {

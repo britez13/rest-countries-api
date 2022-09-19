@@ -3,14 +3,14 @@ import { Link } from "react-router-dom";
 import HomeStyle from "../styles/Home.styled";
 import { FetchFromAPI } from "../utils/FetchFromAPI";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch,faArrowDown } from "@fortawesome/free-solid-svg-icons";
+import { faSearch, faArrowDown } from "@fortawesome/free-solid-svg-icons";
 import { Oval } from "react-loader-spinner";
 
 const Home = ({ isDarkMode, setIsDarkMode }) => {
   const [allCountries, setAllCountries] = useState(null);
   const [countries, setCountries] = useState(null);
   const [countrySearched, setCountrySearched] = useState("");
-  const [region, setRegion] = useState("All");
+  const [region, setRegion] = useState("All Countries");
   const [isLoading, setIsLoading] = useState(true);
 
   const handleSearch = (e) => {
@@ -19,7 +19,7 @@ const Home = ({ isDarkMode, setIsDarkMode }) => {
     setCountries((prev) => {
       let newCountries = [];
 
-      if (region === "All") {
+      if (region === "All Countries") {
         newCountries = allCountries.filter((country) =>
           country.name.common
             .toLowerCase()
@@ -43,9 +43,9 @@ const Home = ({ isDarkMode, setIsDarkMode }) => {
 
   const handleFilter = (e) => {
     console.log(e.target.selectedOptions[0].label);
-    if (e.target.selectedOptions[0].label === "All") {
+    if (e.target.selectedOptions[0].label === "All Countries") {
       setCountries(allCountries);
-      setRegion("All");
+      setRegion("All Countries");
     } else {
       const newCountries = allCountries.filter(
         (country) => country.region === e.target.selectedOptions[0].label
@@ -67,18 +67,19 @@ const Home = ({ isDarkMode, setIsDarkMode }) => {
       window.matchMedia &&
       window.matchMedia("(prefers-color-scheme: dark)").matches
     ) {
-      setIsDarkMode(true)
+      setIsDarkMode(true);
     }
-
   }, []);
-
-  console.log(countries);
 
   return (
     <HomeStyle isDarkMode={isDarkMode}>
       <section className='home-wrapper'>
         <section className='options'>
-          <form className='options__form' id='my_form' onSubmit={e => e.preventDefault()}>
+          <form
+            className='options__form'
+            id='my_form'
+            onSubmit={(e) => e.preventDefault()}
+          >
             <FontAwesomeIcon
               className='options__search-icon'
               icon={faSearch}
@@ -98,7 +99,7 @@ const Home = ({ isDarkMode, setIsDarkMode }) => {
             id='my_form'
             onChange={handleFilter}
           >
-            <option value='value0'>All</option>
+            <option value='value0'>All Countries</option>
             <option value='value1'>Africa</option>
             <option value='value2'>Americas</option>
             <option value='value3'>Asia</option>
@@ -121,8 +122,12 @@ const Home = ({ isDarkMode, setIsDarkMode }) => {
               strokeWidth={2}
               strokeWidthSecondary={2}
             />
+          ) : countries.length === 0 ? (
+            <p className='no-country-warning'>
+              No country matches "{countrySearched}" <span>¯\_(ツ)_/¯</span>
+            </p>
           ) : (
-            countries.length === 0 ? <p className="no-country-warning">Any country match width the input.</p>  : countries.map(({ name, flags, population, region, capital }) => {
+            countries.map(({ name, flags, population, region, capital }) => {
               return (
                 <Link
                   className='country'
