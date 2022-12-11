@@ -42,7 +42,6 @@ const Home = ({ isDarkMode, setIsDarkMode }) => {
   };
 
   const handleFilter = (e) => {
-    console.log(e.target.selectedOptions[0].label);
     if (e.target.selectedOptions[0].label === "All Countries") {
       setCountries(allCountries);
       setRegion("All Countries");
