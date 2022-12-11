@@ -1,9 +1,9 @@
-import React, { useContext, useEffect, useState } from "react";
+import { React, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import HomeStyle from "../styles/Home.styled";
 import { FetchFromAPI } from "../utils/FetchFromAPI";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch, faArrowDown } from "@fortawesome/free-solid-svg-icons";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { Oval } from "react-loader-spinner";
 
 const Home = ({ isDarkMode, setIsDarkMode }) => {
@@ -11,7 +11,7 @@ const Home = ({ isDarkMode, setIsDarkMode }) => {
   const [countries, setCountries] = useState(null);
   const [countrySearched, setCountrySearched] = useState("");
   const [region, setRegion] = useState("All Countries");
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -56,12 +56,6 @@ const Home = ({ isDarkMode, setIsDarkMode }) => {
   };
 
   useEffect(() => {
-    FetchFromAPI("all").then((data) => {
-      setAllCountries(data);
-      setCountries(data);
-      setIsLoading(false);
-      localStorage.setItem("allCountries", JSON.stringify(data));
-    });
 
     if (
       window.matchMedia &&
@@ -69,6 +63,22 @@ const Home = ({ isDarkMode, setIsDarkMode }) => {
     ) {
       setIsDarkMode(true);
     }
+
+    if (localStorage.getItem("allCountries")) {
+       setAllCountries(JSON.parse(localStorage.getItem("allCountries")));
+       setCountries(JSON.parse(localStorage.getItem("allCountries")));
+       return
+    }
+
+    setIsLoading(true);
+
+    FetchFromAPI("all").then((data) => {
+      setAllCountries(data);
+      setCountries(data);
+      setIsLoading(false);
+      localStorage.setItem("allCountries", JSON.stringify(data));
+    });
+
   }, []);
 
   return (
@@ -99,7 +109,7 @@ const Home = ({ isDarkMode, setIsDarkMode }) => {
             id='my_form'
             onChange={handleFilter}
           >
-            <option value='value0'>All Countries</option>
+            <option value='value0'>All continents</option>
             <option value='value1'>Africa</option>
             <option value='value2'>Americas</option>
             <option value='value3'>Asia</option>
@@ -122,12 +132,12 @@ const Home = ({ isDarkMode, setIsDarkMode }) => {
               strokeWidth={2}
               strokeWidthSecondary={2}
             />
-          ) : countries.length === 0 ? (
+          ) : countries?.length === 0 ? (
             <p className='no-country-warning'>
               No country matches "{countrySearched}" <span>¯\_(ツ)_/¯</span>
             </p>
           ) : (
-            countries.map(({ name, flags, population, region, capital }) => {
+            countries?.map(({ name, flags, population, region, capital }) => {
               return (
                 <Link
                   className='country'
